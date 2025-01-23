@@ -77,6 +77,33 @@ class AddressBook {
         console.log("\nContacts sorted alphabetically by name:");
         this.displayContacts();
     }
+    sortContactsByCity() {
+        if (this.contacts.length === 0) {
+            console.log("No contacts available to sort.");
+            return;
+        }
+        this.contacts.sort((a, b) => a.city.toLowerCase().localeCompare(b.city.toLowerCase()));
+        console.log("\nContacts sorted by city:");
+        this.displayContacts();
+    }
+    sortContactsByState() {
+        if (this.contacts.length === 0) {
+            console.log("No contacts available to sort.");
+            return;
+        }
+        this.contacts.sort((a, b) => a.state.toLowerCase().localeCompare(b.state.toLowerCase()));
+        console.log("\nContacts sorted by state:");
+        this.displayContacts();
+    }
+    sortContactsByZip() {
+        if (this.contacts.length === 0) {
+            console.log("No contacts available to sort.");
+            return;
+        }
+        this.contacts.sort((a, b) => a.zip.localeCompare(b.zip));
+        console.log("\nContacts sorted by ZIP:");
+        this.displayContacts();
+    }
     displayContacts() {
         if (this.contacts.length === 0) {
             console.log("No contacts available.");
@@ -151,42 +178,12 @@ class AddressBookSystem {
         console.log("Address book not found.");
         return null;
     }
-    searchAcrossAddressBooks() {
-        const searchType = readlineSync.question("\nSearch by City or State? (city/state): ").toLowerCase();
-        if (searchType !== "city" && searchType !== "state") {
-            console.log("Invalid choice. Please enter 'city' or 'state'.");
-            return;
-        }
-        const searchValue = readlineSync.question(`Enter the ${searchType}: `).toLowerCase();
-        const results = [];
-        let count = 0;
-        this.addressBooks.forEach((addressBook, name) => {
-            addressBook.contacts.forEach((contact) => {
-                if ((searchType === "city" && contact.city.toLowerCase() === searchValue) ||
-                    (searchType === "state" && contact.state.toLowerCase() === searchValue)) {
-                    results.push(`[${name}] ${contact.firstName} ${contact.lastName}, ${contact.address}, ${contact.city}, ${contact.state}, ${contact.zip}, Phone: ${contact.phoneNumber}, Email: ${contact.email}`);
-                    count++;
-                }
-            });
-        });
-        if (results.length === 0) {
-            console.log(`No contacts found in ${searchType}: ${searchValue}.`);
-        }
-        else {
-            console.log(`\nSearch Results for ${searchType}: ${searchValue}`);
-            results.forEach((result, index) => {
-                console.log(`${index + 1}. ${result}`);
-            });
-            console.log(`\nTotal number of contacts in ${searchType} '${searchValue}': ${count}`);
-        }
-    }
     menu() {
         while (true) {
             console.log("\nAddress Book System Menu:");
             console.log("1. Add Address Book");
             console.log("2. Select Address Book");
-            console.log("3. Search Across Address Books");
-            console.log("4. Exit");
+            console.log("3. Exit");
             const choice = readlineSync.question("Enter your choice: ");
             switch (choice) {
                 case "1":
@@ -199,9 +196,6 @@ class AddressBookSystem {
                     }
                     break;
                 case "3":
-                    this.searchAcrossAddressBooks();
-                    break;
-                case "4":
                     console.log("Exiting...");
                     return;
                 default:
@@ -217,7 +211,10 @@ class AddressBookSystem {
             console.log("3. Edit Contact");
             console.log("4. Delete Contact");
             console.log("5. Sort Contacts by Name");
-            console.log("6. Back to Main Menu");
+            console.log("6. Sort Contacts by City");
+            console.log("7. Sort Contacts by State");
+            console.log("8. Sort Contacts by ZIP");
+            console.log("9. Back to Main Menu");
             const choice = readlineSync.question("Enter your choice: ");
             switch (choice) {
                 case "1":
@@ -236,6 +233,15 @@ class AddressBookSystem {
                     addressBook.sortContactsByName();
                     break;
                 case "6":
+                    addressBook.sortContactsByCity();
+                    break;
+                case "7":
+                    addressBook.sortContactsByState();
+                    break;
+                case "8":
+                    addressBook.sortContactsByZip();
+                    break;
+                case "9":
                     return;
                 default:
                     console.log("Invalid choice.");
