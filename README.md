@@ -12,4 +12,4 @@ Use Object Oriented Concepts to manage relationship between AddressBook and Cont
 * UC3: Ability to edit existing contact person using their name.
 Use console to edit person details.
 
-* * Add.
+  * Add.
