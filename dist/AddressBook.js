@@ -38,19 +38,25 @@ class AddressBook {
     constructor() {
         this.contacts = [];
     }
-    addContact() {
-        console.log("\nEnter Contact Details:");
-        const firstName = readlineSync.question("First Name: ");
-        const lastName = readlineSync.question("Last Name: ");
-        const address = readlineSync.question("Address: ");
-        const city = readlineSync.question("City: ");
-        const state = readlineSync.question("State: ");
-        const zip = readlineSync.question("ZIP Code: ");
-        const phoneNumber = readlineSync.question("Phone Number (10 digits): ");
-        const email = readlineSync.question("Email: ");
-        const contact = { firstName, lastName, address, city, state, zip, phoneNumber, email };
-        this.contacts.push(contact);
-        console.log("Contact added successfully!");
+    addContacts() {
+        console.log("\nAdd Multiple Contacts:");
+        while (true) {
+            console.log("\nEnter Contact Details:");
+            const firstName = readlineSync.question("First Name: ");
+            const lastName = readlineSync.question("Last Name: ");
+            const address = readlineSync.question("Address: ");
+            const city = readlineSync.question("City: ");
+            const state = readlineSync.question("State: ");
+            const zip = readlineSync.question("ZIP Code: ");
+            const phoneNumber = readlineSync.question("Phone Number (10 digits): ");
+            const email = readlineSync.question("Email: ");
+            const contact = { firstName, lastName, address, city, state, zip, phoneNumber, email };
+            this.contacts.push(contact);
+            console.log("Contact added successfully!");
+            const addAnother = readlineSync.question("Do you want to add another contact? (y/n): ");
+            if (addAnother === "n")
+                break;
+        }
     }
     displayContacts() {
         if (this.contacts.length === 0) {
@@ -106,7 +112,7 @@ class AddressBook {
             const choice = readlineSync.question("Enter your choice: ");
             switch (choice) {
                 case "1":
-                    this.addContact();
+                    this.addContacts();
                     break;
                 case "2":
                     this.displayContacts();
