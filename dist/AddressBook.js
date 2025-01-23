@@ -44,6 +44,17 @@ class AddressBook {
             console.log("\nEnter Contact Details:");
             const firstName = readlineSync.question("First Name: ");
             const lastName = readlineSync.question("Last Name: ");
+            let isDuplicate = false;
+            for (let i = 0; i < this.contacts.length; i++) {
+                if (this.contacts[i].firstName.toLowerCase() === firstName.toLowerCase() && this.contacts[i].lastName.toLowerCase() === lastName.toLowerCase()) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            if (isDuplicate) {
+                console.log("A contact with the same name already exists.");
+                continue;
+            }
             const address = readlineSync.question("Address: ");
             const city = readlineSync.question("City: ");
             const state = readlineSync.question("State: ");
