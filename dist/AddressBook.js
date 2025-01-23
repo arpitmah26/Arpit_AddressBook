@@ -44,13 +44,8 @@ class AddressBook {
             console.log("\nEnter Contact Details:");
             const firstName = readlineSync.question("First Name: ");
             const lastName = readlineSync.question("Last Name: ");
-            let isDuplicate = false;
-            for (let i = 0; i < this.contacts.length; i++) {
-                if (this.contacts[i].firstName.toLowerCase() === firstName.toLowerCase() && this.contacts[i].lastName.toLowerCase() === lastName.toLowerCase()) {
-                    isDuplicate = true;
-                    break;
-                }
-            }
+            const isDuplicate = this.contacts.some((contact) => contact.firstName.toLowerCase() === firstName.toLowerCase() &&
+                contact.lastName.toLowerCase() === lastName.toLowerCase());
             if (isDuplicate) {
                 console.log("A contact with the same name already exists.");
                 continue;
@@ -75,10 +70,9 @@ class AddressBook {
         }
         else {
             console.log("\nContacts List:");
-            for (let i = 0; i < this.contacts.length; i++) {
-                const contact = this.contacts[i];
-                console.log(`${i + 1}. ${contact.firstName} ${contact.lastName}, Address: ${contact.address}, ${contact.city}, ${contact.state}, ${contact.zip}, Phone: ${contact.phoneNumber}, Email: ${contact.email}`);
-            }
+            this.contacts.forEach((contact, index) => {
+                console.log(`${index + 1}. ${contact.firstName} ${contact.lastName}, Address: ${contact.address}, ${contact.city}, ${contact.state}, ${contact.zip}, Phone: ${contact.phoneNumber}, Email: ${contact.email}`);
+            });
         }
     }
     editContact() {
@@ -144,12 +138,39 @@ class AddressBookSystem {
         console.log("Address book not found.");
         return null;
     }
+    searchAcrossAddressBooks() {
+        const searchType = readlineSync.question("\nSearch by City or State? (city/state): ").toLowerCase();
+        if (searchType !== "city" && searchType !== "state") {
+            console.log("Invalid choice. Please enter 'city' or 'state'.");
+            return;
+        }
+        const searchValue = readlineSync.question(`Enter the ${searchType}: `).toLowerCase();
+        const results = [];
+        this.addressBooks.forEach((addressBook, name) => {
+            addressBook.contacts.forEach((contact) => {
+                if ((searchType === "city" && contact.city.toLowerCase() === searchValue) ||
+                    (searchType === "state" && contact.state.toLowerCase() === searchValue)) {
+                    results.push(`[${name}] ${contact.firstName} ${contact.lastName}, ${contact.address}, ${contact.city}, ${contact.state}, ${contact.zip}, Phone: ${contact.phoneNumber}, Email: ${contact.email}`);
+                }
+            });
+        });
+        if (results.length === 0) {
+            console.log(`No contacts found in ${searchType}: ${searchValue}.`);
+        }
+        else {
+            console.log(`\nSearch Results for ${searchType}: ${searchValue}`);
+            results.forEach((result, index) => {
+                console.log(`${index + 1}. ${result}`);
+            });
+        }
+    }
     menu() {
         while (true) {
             console.log("\nAddress Book System Menu:");
             console.log("1. Add Address Book");
             console.log("2. Select Address Book");
-            console.log("3. Exit");
+            console.log("3. Search Across Address Books");
+            console.log("4. Exit");
             const choice = readlineSync.question("Enter your choice: ");
             switch (choice) {
                 case "1":
@@ -162,6 +183,9 @@ class AddressBookSystem {
                     }
                     break;
                 case "3":
+                    this.searchAcrossAddressBooks();
+                    break;
+                case "4":
                     console.log("Exiting...");
                     return;
                 default:
@@ -171,7 +195,7 @@ class AddressBookSystem {
     }
     addressBookMenu(addressBook) {
         while (true) {
-            console.log(`\nMenu for Address Book`);
+            console.log(`\nMenu for Address Book `);
             console.log("1. Add Contact");
             console.log("2. Display Contacts");
             console.log("3. Edit Contact");
