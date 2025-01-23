@@ -54,6 +54,22 @@ class AddressBook {
     }
   }
 
+  sortContactsByName(): void {
+    if (this.contacts.length === 0) {
+      console.log("No contacts available to sort.");
+      return;
+    }
+    this.contacts.sort((a, b) => {
+      const nameA = a.firstName.toLowerCase() + a.lastName.toLowerCase();
+      const nameB = b.firstName.toLowerCase() + b.lastName.toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+
+    console.log("\nContacts sorted alphabetically by name:");
+    this.displayContacts(); 
+  }
+
+
   displayContacts(): void {
     if (this.contacts.length === 0) {
       console.log("No contacts available.");
@@ -218,7 +234,8 @@ class AddressBookSystem {
       console.log("2. Display Contacts");
       console.log("3. Edit Contact");
       console.log("4. Delete Contact");
-      console.log("5. Back to Main Menu");
+      console.log("5. Sort Contacts by Name");
+      console.log("6. Back to Main Menu");
 
       const choice: string = readlineSync.question("Enter your choice: ");
 
@@ -236,6 +253,9 @@ class AddressBookSystem {
           addressBook.deleteContact();
           break;
         case "5":
+          addressBook.sortContactsByName(); 
+          break;
+        case "6":
           return;
         default:
           console.log("Invalid choice.");
