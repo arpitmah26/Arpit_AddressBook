@@ -146,11 +146,13 @@ class AddressBookSystem {
         }
         const searchValue = readlineSync.question(`Enter the ${searchType}: `).toLowerCase();
         const results = [];
+        let count = 0;
         this.addressBooks.forEach((addressBook, name) => {
             addressBook.contacts.forEach((contact) => {
                 if ((searchType === "city" && contact.city.toLowerCase() === searchValue) ||
                     (searchType === "state" && contact.state.toLowerCase() === searchValue)) {
                     results.push(`[${name}] ${contact.firstName} ${contact.lastName}, ${contact.address}, ${contact.city}, ${contact.state}, ${contact.zip}, Phone: ${contact.phoneNumber}, Email: ${contact.email}`);
+                    count++;
                 }
             });
         });
@@ -162,6 +164,7 @@ class AddressBookSystem {
             results.forEach((result, index) => {
                 console.log(`${index + 1}. ${result}`);
             });
+            console.log(`\nTotal number of contacts in ${searchType} '${searchValue}': ${count}`);
         }
     }
     menu() {
@@ -195,7 +198,7 @@ class AddressBookSystem {
     }
     addressBookMenu(addressBook) {
         while (true) {
-            console.log(`\nMenu for Address Book `);
+            console.log(`\nMenu for Address Book`);
             console.log("1. Add Contact");
             console.log("2. Display Contacts");
             console.log("3. Edit Contact");
