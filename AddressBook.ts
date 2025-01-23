@@ -42,30 +42,46 @@ class AddressBook {
       console.log("\nContacts List:");
       for (let i = 0; i < this.contacts.length; i++) {
         const contact = this.contacts[i];
-        console.log(`${i + 1}. ${contact.firstName} ${contact.lastName}, Address: ${contact.address}, ${contact.city}, ${contact.state}, ${contact.zip}, Phone: ${contact.phoneNumber}, Email: ${contact.email}` );
+        console.log(`${i + 1}. ${contact.firstName} ${contact.lastName}, Address: ${contact.address}, ${contact.city}, ${contact.state}, ${contact.zip}, Phone: ${contact.phoneNumber}, Email: ${contact.email}`);
       }
     }
   }
 
-  editContact(): void {
-    const nameToSearch: string = readlineSync.question("\nEnter the first name of the contact you want to edit: ");
-    
-    const filteredContacts = this.contacts.filter((c) => c.firstName.toLowerCase() === nameToSearch.toLowerCase());
+    editContact(): void {
+      const nameToSearch: string = readlineSync.question("\nEnter the first name of the contact you want to edit: ");
+      
+      const filteredContacts = this.contacts.filter((c) => c.firstName.toLowerCase() === nameToSearch.toLowerCase());
+  
+      if (filteredContacts.length > 0) {
+        const contact = filteredContacts[0];
+        console.log("\nEditing Contact:");
+        contact.firstName = readlineSync.question(`First Name (${contact.firstName}): `, { defaultInput: contact.firstName });
+        contact.lastName = readlineSync.question(`Last Name (${contact.lastName}): `, { defaultInput: contact.lastName });
+        contact.address = readlineSync.question(`Address (${contact.address}): `, { defaultInput: contact.address });
+        contact.city = readlineSync.question(`City (${contact.city}): `, { defaultInput: contact.city });
+        contact.state = readlineSync.question(`State (${contact.state}): `, { defaultInput: contact.state });
+        contact.zip = readlineSync.question(`ZIP Code (${contact.zip}): `, { defaultInput: contact.zip });
+        contact.phoneNumber = readlineSync.question(`Phone Number (${contact.phoneNumber}): `, { defaultInput: contact.phoneNumber });
+        contact.email = readlineSync.question(`Email (${contact.email}): `, { defaultInput: contact.email });
+        console.log("Contact updated successfully!");
+      } 
+      else {
+        console.log("Contact not found.");
+      }
+    }
 
-    if (filteredContacts.length > 0) {
-      const contact = filteredContacts[0];
-      console.log("\nEditing Contact:");
-      contact.firstName = readlineSync.question(`First Name (${contact.firstName}): `, { defaultInput: contact.firstName });
-      contact.lastName = readlineSync.question(`Last Name (${contact.lastName}): `, { defaultInput: contact.lastName });
-      contact.address = readlineSync.question(`Address (${contact.address}): `, { defaultInput: contact.address });
-      contact.city = readlineSync.question(`City (${contact.city}): `, { defaultInput: contact.city });
-      contact.state = readlineSync.question(`State (${contact.state}): `, { defaultInput: contact.state });
-      contact.zip = readlineSync.question(`ZIP Code (${contact.zip}): `, { defaultInput: contact.zip });
-      contact.phoneNumber = readlineSync.question(`Phone Number (${contact.phoneNumber}): `, { defaultInput: contact.phoneNumber });
-      contact.email = readlineSync.question(`Email (${contact.email}): `, { defaultInput: contact.email });
-      console.log("Contact updated successfully!");
-    } 
-    else {
+  deleteContact(): void {
+    const nameToDelete: string = readlineSync.question("\nEnter the first name of the contact you want to delete: ");
+
+    const initialLength = this.contacts.length;
+
+    this.contacts = this.contacts.filter(
+      (c) => c.firstName.toLowerCase() !== nameToDelete.toLowerCase()
+    );
+
+    if (this.contacts.length < initialLength) {
+      console.log("Contact deleted successfully!");
+    } else {
       console.log("Contact not found.");
     }
   }
@@ -76,7 +92,8 @@ class AddressBook {
       console.log("1. Add Contact");
       console.log("2. Display Contacts");
       console.log("3. Edit Contact");
-      console.log("4. Exit");
+      console.log("4. Delete Contact");
+      console.log("5. Exit");
 
       const choice: string = readlineSync.question("Enter your choice: ");
 
@@ -91,6 +108,9 @@ class AddressBook {
           this.editContact();
           break;
         case "4":
+          this.deleteContact();
+          break;
+        case "5":
           console.log("Exiting....");
           return;
         default:
